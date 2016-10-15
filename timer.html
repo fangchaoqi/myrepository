@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>计数器</title>
+		<link rel="stylesheet" type="text/css" href="css/timer.css"/>
+		<script type="text/javascript">
+   var clock1,clock2,clock3,clock4;//四个定时器，全局变量
+   var i = 0;//显示时间初始化,全局变量
+    function toDouble(x)//将计算时间变成两位
+	{
+		if(x<10)
+		{
+			x = "0"+x;
+		return x;
+	}
+	return x+"";
+	}
+	function start_timer(x)//开始或结束计时器
+	{   
+		var time = document.getElementById("time");//显示时间的地方
+		var el_stop = document.getElementById("stop");//停止按钮
+		var count = document.getElementById("count");//计时结果
+		var msg = document.getElementById("msg");
+		var cover = document.getElementById("cover");//结果的时候出来遮住按钮，防止再次计时
+		var close_result = document.getElementById("close");//关闭计时结果的按钮
+		var fontSize = 100;
+		function move()//点SSTART后，控制按钮移动
+     {
+     	if(w==300)//判断按钮停止移动的条件
+     	{
+     		clearInterval(clock1);
+     		return;
+     	}
+     	w-=3;
+     	ww+=3;
+	    x.style.width=w+"px";
+	    el_stop.style.width = ww+"px";
+     }
+    function display_count()//计时结果由大到小出来
+     {
+     	count.style.display = "block";
+     	if(fontSize == 60)
+     	{
+     		clearInterval(clock4);
+     	    setTimeout(function (){close_result.style.display = "block";},500);
+     	}
+     	count.style.fontSize = fontSize + "px";
+     	fontSize -= 2;
+     }
+     function putout()//打印计时结果
+     {
+     	if(h==750)
+     	{
+     	
+     		clearInterval(clock3);
+     		setTimeout(function(){   //显示“本次计时为”这行字
+     			var text =document.getElementById("text");
+     			text.style.display="block";
+     		},200);
+     		setTimeout(function(){//显示计时结果
+     			clock4 = setInterval(display_count,20);
+     		},400);
+     		return;
+     	
+     	}
+     	h+=15;
+     	msg.style.height = h+"px";
+     	
+     }
+     function cacutime()//计算出时间
+     {
+     	
+        i++;
+		var minutes = Math.floor(i/(100*60));
+		var seconds = Math.floor((i%6000)/100);
+		var milliseconds = Math.floor((i%6000)%100);
+		var str = toDouble(minutes)+":"+toDouble(seconds)+":"+toDouble(milliseconds);
+		time.innerText = str;
+     }
+		if(x.innerText == "START"){		//判断开始计时，开始了计时器
+		
+	    var w=600;//按钮初始位置
+		var ww = 0;//按钮初始位置
+		x.innerText = "STOP";
+		clock1 = setInterval(move,5);
+		clock2 = setInterval(cacutime,10);
+		}
+		else{                   //判断结束计时，结束了计时器
+			var h = 0;
+			var minutes = Math.floor(i/(100*60));
+		    var seconds = Math.floor((i%6000)/100);
+		    var milliseconds = Math.floor((i%6000)%100);
+		    var str = minutes+"分"+seconds+"秒"+milliseconds;
+			clearInterval(clock1);
+			clearInterval(clock2);
+			i=0;//结束前将时间初始化为0
+			el_stop.innerText="PAUSE";//退出前将右边按钮设为stop
+			x.style.width="600px";
+			el_stop.style.width = "0px";
+			x.innerText = "START";
+			time.innerText ="";
+			count.innerText=str;
+			cover.style.display = "block";
+			clock3 = setInterval(putout,15);
+		}
+	}
+	function stop_timer(x)//当暂停或继续计时器时触发此事件
+			{
+				var time = document.getElementById("time");//显示时间的地方
+				
+				function cacutime()
+				{   
+					i++;
+					var minutes = Math.floor(i/(100*60));
+					var seconds = Math.floor((i%6000)/100);
+					var milliseconds = Math.floor((i%6000)%100);
+					var str = toDouble(minutes)+":"+toDouble(seconds)+":"+toDouble(milliseconds);
+					time.innerText = str;
+//					console.log(str)
+				}
+				if(x.innerText=="PAUSE")//判断暂停计时器
+				{
+					x.innerText = "CONTINUE";
+					clearInterval(clock2);
+				}
+				else                    //判断继续计时器
+				{
+					x.innerText = "PAUSE";
+					clock2 = setInterval(cacutime,10);
+				}
+			}
+
+			
+			window.onload = function(){
+				var thidkdk = document.getElementById("close");
+				var cover = document.getElementById("cover");
+			    thidkdk.onclick = function() {  //点CLOSE按钮，关闭结果并将样式初始化
+			    var text = document.getElementById("text");
+			    var time = document.getElementById("time");//显示时间的地方
+				var msg = document.getElementById("msg");
+				var count = document.getElementById("count");
+				msg.style.height = "0px";
+				time.innerText = "00:00:00";
+				cover.style.display = "none";
+				text.style.display= "none";
+				thidkdk.style.display = "none";
+				count.style.display ="none";
+			                                 }
+			                          }
+
+</script>
+	</head>
+	<body>
+		<div id="screen">
+			<p id="time">00:00:00</p>
+			<p class="btn start" onclick="start_timer(this)">START</p>
+			<p class="btn stop" id="stop" onclick="stop_timer(this)">PAUSE</p>
+			<div id="msg">
+				<p id="text">本次计时结果为</p>
+				<p id="count" style="margin-top: 20px;color: #12ec07;"></p>
+				<div id="close">CLOSE</div>
+			</div>
+			<div id="cover"></div>
+		</div>
+		
+	</body>
+</html>
