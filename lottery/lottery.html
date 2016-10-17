@@ -1,1 +1,554 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			*
+{
+	margin: 0;
+	padding: 0;
+}
+.main
+{
+	width: 1000px;
+	height: 600px;
+	margin: 100px auto;
+}
+.bg
+{
+	width: 912px;
+	height: 520px;
+	float: left;
+	background-color: #e3e7ff;
+	margin-top:40px;
+	margin-left: 70px;
+	position: relative;
+	border-radius: 10px;
+}
+.btn
+{
+	width: 50px;
+	height: 90px;
+	padding: 30px 0;
+	position: absolute;
+	left: -50px;
+	border-radius: 10px 0 0 10px;
+	background-color: #eff1ff;
+	text-align: center;
+	line-height: 30px;
+	font-size: 26px;
+}
+.select
+{
+	width: 400px;
+	height: 490px;
+	background-color: #eef1ff;
+	margin: 15px;
+	float: left;
+	border-radius: 5px;
+}
+.result
+{
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	background-color: #eef1ff;
+	width: 464px;
+	height: 152px;
+	border-radius: 5px;
+}
+/*开奖结果,开奖信息*/
+.msg
+{
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	background-color: #eef1ff;
+	width: 464px;
+	height: 250px;
+	border-radius: 5px;
+}
+.enter
+{
+	cursor: pointer;
+	width: 109px;
+	height: 41px;
+	position: absolute;
+	top: 193px;
+	right: 193px;
+	text-align: center;
+	line-height: 41px;
+	color: white;
+	font-weight: 500px;
+	font-size: 20px;
+}
+.tb{background: url(../images/btn.png) no-repeat 0 -51px;}
+.ta{background: url(../images/btn.png) no-repeat -220px -51px;}
+.tb:hover
+{
+	background: url(../images/btn.png) no-repeat -110px -51px;
+}
+
+.kjjg
+{
+	margin-top: 22px;
+	
+}
+.txt
+{
+	font-size: 20px;
+	color: #90a1ff;
+	padding-left: 15px;
+}
+.zjh,.xzh
+{
+	margin-top: 12px;
+	height: 48px;
+}
+.zjhm,.xzhm
+{
+	float: left;
+	margin-left: 3px;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: url(../images/ball.png) no-repeat -101px -1px;
+	color: black;
+	cursor: pointer;
+	font-size: 20px;
+	line-height: 48px;
+	text-align: center;
+}
+.xzhm
+{
+background: url(../images/ball.png) no-repeat -51px -1px;	
+}
+.kjxx
+{
+	margin-top: 22px;
+}
+#zj-msg,#rank,#total
+{
+	height: 30px;
+	text-align: center;
+	font-size: 18px;
+	color: #fa6e74;
+}
+/*33个选择号码*/
+:focus{cursor: pointer;}
+.ss
+{
+	margin-top: 7px;
+	height: 340px;
+}
+.dxhm
+{
+	float:left ;
+	width: 48px;height: 48px;
+	background: url(../images/ball.png) no-repeat -1px -1px;	
+	margin-left: 6px;
+	margin-top: 20px;
+	font-size: 20px;
+	line-height: 48px;
+	text-align: center;
+	color: black;
+	cursor: pointer;
+}
+/*.dxhm:hover
+{
+	background: url(../images/ball.png) no-repeat -51px -1px;
+}*/
+.amount
+{
+	height: 40px;
+	margin-top: 20px;
+	position: relative;
+}
+#error
+{
+	position: absolute;
+	height: 40px;
+	width: 400px;
+	line-height: 40px;
+	font-size: 20px;
+	top: 0;
+	left: 0;
+	background-color: red;
+	text-align: center;
+	display: none;
+}
+.many
+{
+	line-height: 40px;
+	margin-left: 70px;
+}
+.rand,.okselect
+{
+	float: left;
+	width: 109px;
+	height: 41px;
+	margin: 24px 24px;
+	line-height: 41px;
+	color: white;
+	font-weight: 500px;
+	font-size: 20px;
+	cursor: pointer;
+	text-align: center;
+}
+.before{background: url(../images/btn.png) no-repeat 0 -2px;}
+.after{background: url(../images/btn.png) no-repeat -220px -2px;}
+.before:hover
+{
+	background: url(../images/btn.png) no-repeat -110px -2px;
+}
+.zs
+{
+	height: 38px;
+	width: 120px;
+	border:1px solid #90a1ff;
+	float: right;
+	margin-right: 88px;
+	line-height: 38px;
+	border-radius: 5px;
+/*	margin-right: 70px;*/
+}
+#num
+{
+	width: 40px;
+	height:100%;
+    line-height: 38px;
+    margin-left: 25px;
+    border: none;
+    float: left;
+    font-size: 20px;
+    background-color:#eef1ff;
+    color: #90a1ff;
+    cursor: pointer;
+}
+:focus
+{
+	outline: none;
+}
+.zs span
+{
+	float: right;
+	margin-right: 30px;
+	height: 38px;
+	line-height: 38px;
+}
+		</style>
+    	<script type="text/javascript">
+    		window.onload = function()
+{
+	var selectedNums = []; //存放选择的号码
+		var mutiple = 1;   //投注倍数
+		var kjNums = []; //存放开奖号码
+		document.getElementById("num").onblur = function() //倍数输入框失去焦点，判断是否输入了数字
+		{
+			if(this.value == "")//如果没有，倍数设为1
+			{
+				this.value = 1;
+			}
+		}
+var btnNum = document.getElementsByClassName("dxhm");//33个待选的
+function BtnNum(val,num)  //该构造函数的一个实例对应一个待选号码
+{ 
+	this.sel = false;//表示选中状态，ture代表选中，false代表没有
+	this.oDiv = btnNum[num];//代表dom对象
+	this.val = val;//代表选中的号码的值
+	this.start();
+}
+BtnNum.prototype.start = function()
+{
+	var self =this;
+	this.oDiv.onmousedown = function()
+	{
+		self.changeBg();
+	}
+}
+BtnNum.prototype.changeBg = function() //按下时改变选中状态
+{
+	if(this.sel)//如果已经选中，变为不选中
+	{
+	this.oDiv.style.background = "url(../images/ball.png) no-repeat -1px -1px";
+	this.sel = false;
+	}
+	else//如果没有选中，则变为选中
+	{
+	this.oDiv.style.background = "url(../images/ball.png) no-repeat -51px -1px";
+	this.sel = true;
+	}
+	
+}
+var arrNum = [];   //创建33个实例，存放在一个数组中
+for(var i=0;i<btnNum.length;i++)
+{
+	arrNum[i] = new BtnNum(i+1,i);//对象下标为0；但值为1；所以加1
+}
+
+//----------------机选按钮和确定按钮的方法--------------------------
+var randEnter = document.getElementById("rand");//机选按钮的dom对象
+var okEnter = document.getElementById("select");//确定按钮的dom对象
+randEnter.onmousedown = function()//机选按钮按下事件发生时，执行的函数
+{
+	this.className = this.className.replace("before","after");//按钮颜色改变
+	if(selectedNum[0].innerText!="")//判断右边是否有选中的号码，如果有，就将右边清空
+	{
+		for(var i = 0; i< selectedNum.length;i++)
+		{
+			selectedNum[i].innerText = "";
+		}
+	}
+		for(var i = 0;i<arrNum.length;i++)//机选之前将左边33个里面已选择的号码清空
+	{
+		if(arrNum[i].sel)
+		{
+			arrNum[i].changeBg();
+		}
+	}
+}
+randEnter.onmouseup = function()//机选按钮松开这一事件发生时，执行的函数
+{
+	this.className = this.className.replace("after","before");//改变背景图片
+	var a = randSeven();
+	for(var i = 0;i<a.length;i++)//将选中的号码颜色改变，选中状态设为true
+	{
+	arrNum[a[i]].changeBg();//将机选出的号码变为选中状态
+	}
+}
+function randSeven() //得到7个随机号码，不重复，并返回数组
+{
+	var a = [];
+	for(var i = 0;i<7;i++)
+	{
+		a[i] = Math.floor(Math.random()*33);
+		for(var j = i-1;j>=0;j--)
+		{
+			if(a[j] == a[i])
+			{
+				i--;
+				break;
+			}
+		}
+	}
+	return a;
+}
+//-------------------确定按钮的事件定义-------------------
+okEnter.onmousedown = function()//确定按钮按下时发生的事件------背景图改变
+{
+	this.className = this.className.replace("before","after");
+}
+var selectedNum = document.getElementsByClassName("xzhm");
+okEnter.onmouseup = function()//确定按钮松开时发生的事件-----------背景图改变，并显示出选号结果
+{
+	this.className = this.className.replace("after","before");
+	if(selectedNum[0].innerText !="") //判断是否已经有选号结果，如果有了，就清空
+	{
+		for(var i = 0; i< selectedNum.length;i++)
+		{
+			selectedNum[i].innerText = "";
+		}
+	}
+	var a = 0; //提交选号结果前，先检查选择了多少个号码，用a表示
+	for(var i = 0;i<arrNum.length;i++)//arrNum代表33个号码的33个dom对象构成的数组
+	{
+		if(arrNum[i].sel)//如果该对象的sel属性为true，表示该号码选中
+		{
+		a++;	//a加一下
+		}
+	}
+	if(a!=7)//判断选择的号码个数不为7，就取消提交，打印出错信息,退出
+	{
+		if(a>7)
+		{document.getElementById("error").innerText = "请选择7个号码，你多选了"+(a-7)+"个";}
+        else {document.getElementById("error").innerText = "请选择7个号码，你少选了"+(7-a)+"个";}
+        document.getElementById("error").style.display = "block";
+        setTimeout(disapear,2000);//2秒执行disapear（）函数，让出错消息消失
+	return;
+	}
+	var b = 0;//a等于7时执行到这一步，b的值代表右边7个选中号码的dom对象的下标
+	for(var i = 0;i<arrNum.length;i++)
+	{
+		if(arrNum[i].sel) //如果左边选中了，就把它的值给右边
+		{
+		selectedNum[b].innerText = arrNum[i].val;
+		selectedNums[b] = arrNum[i].val; //selectedNums是存放选择的号码的数组，将选择的号码的值放进去
+		b++;
+		}
+	}
+}
+function disapear()//执行后让错误消息消失
+{
+	if(document.getElementById("error").style.display = "block")
+	document.getElementById("error").style.display = "none";
+	return;
+}
+document.getElementById("error").onclick = function()//点击让错误消息消失
+{
+	this.style.display = "none";
+}
+//-----------开奖按钮的方法--------------
+var getResult = document.getElementById("enter"); // 代表开奖按钮的dom对象
+var zjNum = document.getElementsByClassName("zjhm");//7个开奖号码的dom对象组成的数组
+getResult.onmousedown = function()//开奖按钮按下时发生事件，
+{
+	this.className = this.className.replace("tb","ta");//改变背景图
+	if(selectedNum[0].innerText =="")//判断选号结果是否为空，如果为空，就退出不执行
+	return;
+	var a = randSeven(); //从0~32中选择7个不重复的随机数，放在数组a中
+	for(var i = 0;i<a.length;i++)
+	{
+		zjNum[i].innerText = a[i]+1; //加1是因为中奖号码是1~33之间
+		kjNums[i] = a[i] + 1; //kjNums 是存放开奖号码的数组，把取到的随机数放进去
+	}
+	var zjs = getAmount();//返回中的号码个数给zjs
+	var num = parseInt(document.getElementById("num").value);//得到投注倍数
+	getMoney(zjs,num);//计算中奖金额，并打印中奖情况
+}
+getResult.onmouseup = function()
+{
+	this.className = this.className.replace("ta","tb");//改变背景图
+}
+function getAmount() //计算有几个中奖号码
+{
+	 var zjs = 0;
+	for(var i = 0; i< 7;i++)
+	{
+		for(var j = 0;j<7;j++)
+		{
+			if(selectedNums[j] == kjNums[i])
+			{
+				zjs++;
+				break;
+			}
+		}
+	}
+	return zjs;
+}
+function getMoney(x,y)  //计算中奖金额，并打印中奖情况
+{
+	if(x<3)//如果中的个数小于3，就没有奖
+	{
+		document.getElementById("zj-msg").innerText = "抱歉，没有中奖";
+		document.getElementById("rank").innerText = "奖金级别： 奖金额度：0元";
+		document.getElementById("total").innerText = "总奖金：0元";
+	}
+	else //判断奖金等级t，单注金额z，总金额total
+	{
+		if(x==3){var z = 5;var t = "四";}
+		else if(x==4){var z = 10;var t = "三";}
+		else if(x==5){var z = 200;var t = "二";}
+		else if(x==6){var z =5000;var t = "一";}
+		else if(x==7){var z =100000;var t = "特";}
+		var total = y*z;
+		document.getElementById("zj-msg").innerText = "恭喜你，中奖啦~";
+		document.getElementById("rank").innerText = "奖金级别："+t+"等奖 奖金额度："+z+"元";
+		document.getElementById("total").innerText = "总奖金："+total+"元";
+	}
+}
+}
+
+    	</script>
+	</head>
+	<body>
+		<div class="main">
+			<div class="bg">
+			<div class="btn" style="top: 30px;">33<br/>选<br />7</div>
+			<div class="btn" style="top: 185px;">33<br/>选<br />7</div>
+			<div class="btn" style="top: 340px;">33<br/>选<br />7</div>
+			<div class="select">
+				<div class="ss">
+					<div class="dxhm" style="margin-left: 14px;">1</div>
+					<div class="dxhm">2</div>
+					<div class="dxhm">3</div>
+					<div class="dxhm">4</div>
+					<div class="dxhm">5</div>
+					<div class="dxhm">6</div>
+					<div class="dxhm">7</div>
+					
+					<div class="dxhm" style="margin-left: 14px;">8</div>
+					<div class="dxhm">9</div>
+					<div class="dxhm">10</div>
+					<div class="dxhm">11</div>
+					<div class="dxhm">12</div>
+					<div class="dxhm">13</div>
+					<div class="dxhm">14</div>
+					
+					<div class="dxhm" style="margin-left: 14px;">15</div>
+					<div class="dxhm">16</div>
+					<div class="dxhm">17</div>
+					<div class="dxhm">18</div>
+					<div class="dxhm">19</div>
+					<div class="dxhm">20</div>
+					<div class="dxhm">21</div>
+					
+					<div class="dxhm" style="margin-left: 14px;">22</div>
+					<div class="dxhm">23</div>
+					<div class="dxhm">24</div>
+					<div class="dxhm">25</div>
+					<div class="dxhm">26</div>
+					<div class="dxhm">27</div>
+					<div class="dxhm">28</div>
+					
+					<div class="dxhm" style="margin-left: 14px;">29</div>
+					<div class="dxhm">30</div>
+					<div class="dxhm">31</div>
+					<div class="dxhm">32</div>
+					<div class="dxhm">33</div>
+				</div>
+				<div class="amount">
+					<span class="txt many">投注数</span>
+					<div class="zs">
+					<input type="text"  id="num" value="1">
+					<span class="txt" style="padding-left: 0;">注</span>
+					</div>
+					<div id="error"></div>
+				</div>
+				<div id="rand" class="rand before" style="margin-left: 70px;">机选</div>
+				<div id="select" class="okselect before">确定</div>
+			</div>
+			<!--
+            	作者：fangchao0820@126.com
+            	时间：2016-10-13
+            	描述：选号结果
+            -->
+			<div class="result">
+				<p class="kjjg txt">选号结果:</p>
+				<div class="xzh" style="margin-top: 24px;">
+					<div class="xzhm" style="margin-left: 48px;"></div>
+					<div class="xzhm"></div>
+					<div class="xzhm"></div>
+					<div class="xzhm"></div>
+					<div class="xzhm"></div>
+					<div class="xzhm"></div>
+					<div class="xzhm"></div>
+				</div>
+			</div>
+			<!--
+            	作者：fangchao0820@126.com
+            	时间：2016-10-13
+            	描述：开奖结果
+            -->
+			<div class="msg">
+				<p class="kjjg txt">开奖结果:</p>
+				<div class="zjh">
+					<div class="zjhm" style="margin-left: 48px;"></div>
+					<div class="zjhm"></div>
+					<div class="zjhm"></div>
+					<div class="zjhm"></div>
+					<div class="zjhm"></div>
+					<div class="zjhm"></div>
+					<div class="zjhm"></div>
+				</div>
+				<p class="kjxx txt">开奖信息:</p>
+				<p id="zj-msg">~敬请期待~</p>
+				<p id="rank"></p>
+				<p id="total"></p>
+			</div>
+			<div id="enter" class="enter tb">开奖</div>
+			</div>
+		</div>
+	</body>
+</html>
 
